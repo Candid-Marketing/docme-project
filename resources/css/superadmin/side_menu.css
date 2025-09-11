@@ -1,0 +1,754 @@
+@import url(https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap);
+@import url(https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap);
+
+/* =========== Google Fonts ============ */
+
+/* =============== Globals ============== */
+* {
+  /* font-family: "Ubuntu", sans-serif; */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+}
+
+:root {
+  --blue: #2a2185;
+  --white: #fff;
+  --gray: #f5f5f5;
+  --black1: #222;
+  --black2: #999;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-color: white;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.container {
+    position: relative;
+    background-color: white;
+    font-family: 'Montserrat', sans-serif;
+    max-width: 100%;
+    padding: 20px;
+    overflow-x: auto; /* Enables horizontal scrolling */
+    overflow-y: auto; /* Enables vertical scrolling */
+    max-height: 80vh; /* Adjusts max height to fit within the viewport */
+  }
+
+
+
+/* =============== Sidebar Navigation ================ */
+.navigation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100vh; /* Full height */
+    background: linear-gradient(to bottom , #3b68b2, #3abfdd);
+    transition: 0.5s;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: space-between;  comment */
+    z-index: 10000;
+    padding-top: 10px;
+    overflow: hidden;
+}
+/* Logo Section */
+.logo-container {
+    width: 100%;
+    background-color: white; /* White background */
+    text-align: center;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Adds slight shadow */
+}
+
+.sidebar-logo {
+    max-width: 70%;
+    height: auto;
+    object-fit: contain;
+    padding-bottom: 25px;
+    padding-top: 10px;
+}
+
+/* ========== Menu Styles ========== */
+.navigation ul {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+}
+
+.navigation ul li {
+    width: 100%;
+    list-style: none;
+}
+
+.navigation ul li a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--white);
+    padding-left: 40px;
+    padding-bottom: 5px;
+    padding-top:5px;
+}
+
+.navigation ul li a .icon {
+    min-width: 50px;
+    text-align: center;
+}
+
+.navigation ul li a .icon ion-icon {
+    font-size: 1.75rem;
+}
+
+.navigation ul li a .title {
+    flex-grow: 1;
+    text-align: start;
+    white-space: nowrap;
+}
+
+
+
+
+  /* ========== User Profile (At the Bottom) ========== */
+  .user-profile {
+    width: 100%;
+    text-align: center;
+    padding-bottom: 25px;
+    margin-top: auto; /* Ensures it stays at the bottom */
+    padding-right: 25px;
+  }
+
+  .user-profile a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+  }
+
+  .user-profile .icon img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .user-details {
+    text-align: center;
+    color: white;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+
+  /* Adjust Content Wrapper */
+  .content-wrapper {
+    margin-left: 300px;
+    width: calc(100% - 300px);
+    transition: 0.3s;
+    padding: 20px;
+    background-color: white;
+  }
+
+  .test {
+   padding-right: 25px;
+  }
+  .navigation.active ~ .content-wrapper {
+    margin-left: 110px;
+    width: calc(100% - 110px);
+  }
+
+  /* ✅ Hover Effect */
+.navigation ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+  /* ✅ Active Menu Item */
+.navigation ul li a.active {
+    background-color: rgb(17, 12, 12); /* White Background */
+    color: rgb(241, 238, 245); /* Match Sidebar Theme */
+    font-weight: bold;
+    border-left: 5px solid var(--blue); /* Left Border Indicator */
+}
+
+/* ✅ Active Hover Effect */
+.navigation ul li a.active:hover {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+
+/* =============== Footer (Fixed to Bottom) ================ */
+.footer {
+    position: fixed; /* Keeps it at the bottom */
+    bottom: 0;
+    left: 300px; /* Aligns with sidebar */
+    width: calc(100% - 300px); /* Ensures it fits within layout */
+    text-align: center;
+    padding: 5px;
+    background: linear-gradient(to left, rgb(104,54,149), rgb(58,191,221));
+    color: white;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    z-index: 9999; /* Ensures visibility */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Adds space between text and link */
+}
+
+/* Responsive Footer (for smaller screens) */
+@media screen and (max-width: 1024px) {
+    .footer {
+        left: 0;
+        width: 100%;
+    }
+}
+
+.footer p,
+.footer a {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    color: white;
+    font-size: 9px;
+}
+
+.footer a {
+    color: white; /* Gold for visibility */
+    text-decoration: none;
+    transition: color 0.3s;
+    text-decoration: underline;
+}
+
+.footer a:hover {
+    color: #ffffff; /* White on hover */
+    text-decoration: underline;
+}
+
+
+/* ===================== Main ===================== */
+.main {
+    position: fixed; /* Prevents shifting due to absolute positioning */
+    width: calc(100% - 300px);
+    left: 300px;
+    min-height: 100vh;
+    background: white;
+    transition: 0.5s;
+    top: 70px;
+    overflow: hidden; /* Prevent scrolling */
+  }
+
+.main.active {
+  width: calc(100% - 80px);
+  left: 80px;
+}
+
+.topbar {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.toggle {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+  cursor: pointer;
+  display: none;
+}
+
+.search {
+  position: relative;
+  width: 400px;
+  margin: 0 10px;
+}
+
+.search label {
+  position: relative;
+  width: 100%;
+}
+
+.search label input {
+  width: 100%;
+  height: 40px;
+  border-radius: 40px;
+  padding: 5px 20px;
+  padding-left: 35px;
+  font-size: 18px;
+  outline: none;
+  border: 1px solid var(--black2);
+}
+
+.search label ion-icon {
+  position: absolute;
+  top: 11px;
+  left: 10px;
+  font-size: 1.2rem;
+}
+
+.user {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.user img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+/* .container h1{
+    padding: 20px;
+} */
+/* ======================= Cards ====================== */
+.cardBox {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap; /* Ensures wrapping instead of overflowing */
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  padding: 20px;
+}
+
+
+.card {
+    flex: 1;
+    min-width: 250px;
+    max-width: 100%;
+    background: #fff;
+    padding: 20px;
+    font-size: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    display: flex; /* Align items horizontally */
+    flex-direction: row; /* Ensure icon is first */
+    align-items: left;
+    gap: 15px; /* Add space between icon and text */
+    overflow: hidden;
+}
+
+/* Ensures text stays aligned to the left */
+.card div {
+    text-align: left;
+}
+
+/* Style the icon */
+.iconBx {
+    font-size: 30px;
+    color: #007bff;
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    min-width: 50px; /* Ensure the icon maintains spacing */
+}
+
+
+
+/* ================== Order Details List ============== */
+.details {
+  position: relative;
+  width: 100%;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-gap: 30px;
+  /* margin-top: 10px; */
+}
+
+.details .recentOrders {
+  position: relative;
+  display: grid;
+  min-height: 500px;
+  background: var(--white);
+  padding: 20px;
+  box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+}
+
+.details .cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.cardHeader h2 {
+  font-weight: 600;
+  color: var(--blue);
+}
+.cardHeader .btn {
+  position: relative;
+  padding: 5px 10px;
+  background: var(--blue);
+  text-decoration: none;
+  color: var(--white);
+  border-radius: 6px;
+}
+
+/* .details table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+.details table thead td {
+  font-weight: 600;
+}
+.details .recentOrders table tr {
+  color: var(--black1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.details .recentOrders table tr:last-child {
+  border-bottom: none;
+}
+.details .recentOrders table tbody tr:hover {
+  background: var(--blue);
+  color: var(--white);
+}
+.details .recentOrders table tr td {
+  padding: 10px;
+}
+.details .recentOrders table tr td:last-child {
+  text-align: end;
+}
+.details .recentOrders table tr td:nth-child(2) {
+  text-align: end;
+}
+.details .recentOrders table tr td:nth-child(3) {
+  text-align: center;
+}
+.status.delivered {
+  padding: 2px 4px;
+  background: #8de02c;
+  color: var(--white);
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.status.pending {
+  padding: 2px 4px;
+  background: #e9b10a;
+  color: var(--white);
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.status.return {
+  padding: 2px 4px;
+  background: #f00;
+  color: var(--white);
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.status.inProgress {
+  padding: 2px 4px;
+  background: #1795ce;
+  color: var(--white);
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.recentCustomers {
+  position: relative;
+  display: grid;
+  min-height: 500px;
+  padding: 20px;
+  background: var(--white);
+  box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+}
+.recentCustomers .imgBx {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50px;
+  overflow: hidden;
+}
+.recentCustomers .imgBx img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.recentCustomers table tr td {
+  padding: 12px 10px;
+}
+.recentCustomers table tr td h4 {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.2rem;
+}
+.recentCustomers table tr td h4 span {
+  font-size: 14px;
+  color: var(--black2);
+}
+.recentCustomers table tr:hover {
+  background: var(--blue);
+  color: var(--white);
+}
+.recentCustomers table tr:hover td h4 span {
+  color: var(--white);
+} */
+
+/* ====================== Responsive Design ========================== */
+@media (max-width: 991px) {
+    .topbar{
+        margin-top: 50px;
+    }
+    .search {
+        width: 300px; /* Adjust width for medium screens */
+        margin: 0 auto; /* Center the search bar */
+      }
+    .toggle {
+        display: block;
+    }
+
+  .navigation {
+    left: -400px;
+    z-index: 1000;
+  }
+  .navigation.active {
+    width: 300px;
+    left: 0;
+    z-index: 10000;
+  }
+  .main {
+    width: 100%;
+    left: 0;
+    top: 120px;
+  }
+  .main.active {
+    left: 300px;
+  }
+  .cardBox {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+
+@media (max-width: 768px) {
+    .topbar{
+        margin-top: 50px;
+    }
+    .search {
+        width: 250px; /* Reduce width for smaller screens */
+        margin: 10px auto; /* Center and add spacing */
+      }
+      .search label input {
+        font-size: 16px; /* Adjust font size */
+        padding-left: 30px; /* Adjust padding for smaller screens */
+      }
+      .search label ion-icon {
+        font-size: 1rem; /* Adjust icon size */
+        left: 8px; /* Adjust icon position */
+      }
+    .toggle {
+        display: block;
+    }
+  .details {
+    grid-template-columns: 1fr;
+  }
+  .recentOrders {
+    overflow-x: auto;
+  }
+  .status.inProgress {
+    white-space: nowrap;
+  }
+
+  .navigation {
+    z-index: 1000;
+  }
+  .navigation.activate{
+    z-index: 10000;
+  }
+}
+
+@media (max-width: 480px) {
+    .topbar{
+        margin-top: 50px;
+    }
+    .search {
+        width: 100%; /* Full width for very small screens */
+        margin: 10px 0; /* Adjust spacing */
+        padding: 0 10px; /* Add horizontal padding */
+      }
+      .search label input {
+        font-size: 14px; /* Smaller font size for small screens */
+        padding-left: 25px; /* Adjust padding for smaller screens */
+      }
+      .search label ion-icon {
+        font-size: 0.9rem; /* Smaller icon size */
+        left: 5px; /* Adjust icon position */
+      }
+    .toggle {
+        display: block;
+    }
+
+  .cardBox {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .cardHeader h2 {
+    font-size: 20px;
+  }
+  .user {
+    min-width: 40px;
+  }
+  .navigation {
+    width: 100%;
+    left: -100%;
+    z-index: 1000;
+  }
+  .navigation.active {
+    width: 100%;
+    left: 0;
+    z-index: 10000;
+  }
+  .toggle {
+    z-index: 10001;
+  }
+  .main.active .toggle {
+    color: #fff;
+    position: fixed;
+    right: 0;
+    left: initial;
+  }
+  .user-details {
+    display: flex;
+    align-items: center; /* Center align the content */
+    margin-top: 10px; /* Add space between name and role */
+  }
+
+  .user-details p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #333;
+    padding-left: 70px;
+  }
+
+  .user-profile {
+    text-align: center; /* Ensure everything is centered */
+  }
+
+  .user-profile .title {
+    margin-bottom: 5px; /* Space between name and role */
+  }
+}
+
+
+.divider {
+    border: 0;
+    height: 1px;
+    background: hsl(0 0% 301% / 1); /* Adjust color as needed */
+    margin: 10px 0; /* Adjust spacing */
+}
+
+.icon.center {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100%;
+    padding-left: 60px; /* Ensure the span has height */
+}
+
+.logo {
+    width: 100px; /* Adjust width as needed */
+    height: auto; /* Maintain aspect ratio */
+}
+
+
+.user-photo {
+    width: 60px; /* Set fixed width */
+    height: 60px; /* Set fixed height */
+    border-radius: 50%; /* Make it circular */
+    -o-object-fit: cover;
+       object-fit: cover; /* Maintain aspect ratio */
+}
+
+.user-details p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #333;
+}
+#registrationChart {
+    width: 100%;  /* makes it responsive */
+    height: 120px; /* set a fixed height */
+}
+.loan-option {
+    display: block;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    text-align: center;
+    transition: 0.3s;
+    cursor: pointer;
+}
+.loan-option:hover, .loan-option input:checked + img {
+    border-color: #007bff;
+}
+.loan-option img {
+    width: 100px;
+    height: 100px;
+    display: block;
+    margin: 0 auto 10px;
+}
+.loan-option p {
+    margin: 0;
+    font-weight: bold;
+}
+.property-type {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+.form-check-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.property-type, .form-group {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+.form-check-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.folders{
+    padding: 25px;
+}
+

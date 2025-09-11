@@ -1,0 +1,157 @@
+html, body {
+    height: 100%; /* Ensure the body and html take full height */
+    margin: 0; /* Remove default margin */
+    border: 5px solid rgb(92, 0, 131); /* Add a border to the body */
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+/* Sidebar */
+.sidebar {
+    background: linear-gradient(to bottom, rgb(92, 0, 131), rgb(241, 106, 214));
+    color: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 250px; /* Set a width for the sidebar */
+    height: 100%; /* Make the sidebar match the full height of the body */
+    position: fixed; /* Keep the sidebar fixed on the screen */
+    border: 5px solid rgb(92, 0, 131);
+}
+.main-content {
+    margin-left: 315px; /* Matches the sidebar width */
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #f5f5f5; /* Optional for visibility */
+}
+.sidebar h2 {
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar li {
+    margin: 10px 0; /* Vertical spacing between items */
+}
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.sidebar a:hover {
+    color: #ffccff;
+}
+
+/* Logo */
+.logo-container {
+    text-align: center; /* Center the logo */
+    margin-bottom: 20px; /* Add space below the logo */
+}
+.logo {
+    max-width: 80%; /* Adjust logo size to fit within the hexagon */
+    max-height: 80%; /* Maintain aspect ratio */
+    -o-object-fit: contain;
+       object-fit: contain; /* Ensure the logo scales correctly */
+}
+
+
+#sidebar {
+    width: 250px;
+    background-color: #2c3e50;
+    color: #fff;
+    padding: 20px;
+    position: fixed;
+    height: 100%;
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    width: 100px;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-menu li {
+    display: flex;
+    align-items: center; /* Vertically centers the items */
+    padding: 5px 0; /* Optional: Adjusts spacing between items */
+}
+
+.sidebar-menu li{
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.sidebar-menu li a:hover {
+    background-color: #34495e;
+}
+
+.sidebar-menu i {
+    margin-right: 50px; /* Adjust this value as needed */
+}
+
+/* Style the .line to create a horizontal line */
+.sidebar-menu .line {
+    border-bottom: 1px solid #ccc; /* Creates the line */
+    margin: 10px 0; /* Adds space above and below the line */
+
+}
+
+/* User Info Section Styling */
+.user-info {
+    position: absolute;
+    bottom: 60px;
+    left: 10px;
+    color: #fff; /* Adjust text color */
+    font-size: 14px;
+}
+
+.user-info p {
+    margin: 0;
+    padding: 5px 0;
+}
+
+.user-info strong {
+    font-weight: bold;
+}
+
+.user-info .line {
+    border-bottom: 1px solid #ccc; /* Creates the line */
+    margin: 10px 10px; /* Adds space above and below the line */
+    width: 152%;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center; /* Aligns items vertically centered */
+}
+
+.user-photo {
+    width: 40px;  /* Adjust width */
+    height: 40px; /* Adjust height */
+    border-radius: 50%; /* Circle shape */
+    margin-right: 10px; /* Space between the photo and the name */
+}
+
+.user-details p {
+    margin: 0; /* Remove default margin */
+    color: #fff; /* Text color (you can change it as needed) */
+}
+
+.user-details strong {
+    color: #fdfdfd; /* Gold color for the role (you can change it) */
+}
+

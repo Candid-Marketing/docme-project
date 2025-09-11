@@ -1,0 +1,49 @@
+html, body {
+    height: 100%; /* Ensure the body and html take full height */
+    margin: 0; /* Remove default margin */
+    border: 5px solid rgb(92, 0, 131); /* Add a border to the body */
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+/* Sidebar */
+.sidebar {
+    background: linear-gradient(to bottom, rgb(92, 0, 131), rgb(241, 106, 214));
+    color: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 250px; /* Set a width for the sidebar */
+    height: 100%; /* Make the sidebar match the full height of the body */
+    position: fixed; /* Keep the sidebar fixed on the screen */
+    border: 5px solid rgb(92, 0, 131);
+}
+
+.sidebar h2 {
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar li {
+    margin: 10px 0; /* Vertical spacing between items */
+}
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+
+
+/* Logo */
+.logo-container {
+    text-align: center; /* Center the logo */
+    margin-bottom: 20px; /* Add space below the logo */
+}
+.logo {
+    max-width: 80%; /* Adjust logo size to fit within the hexagon */
+    max-height: 80%; /* Maintain aspect ratio */
+    object-fit: contain; /* Ensure the logo scales correctly */
+}
