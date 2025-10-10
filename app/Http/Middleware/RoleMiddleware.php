@@ -22,7 +22,7 @@ class RoleMiddleware
 
         // Redirect if not logged in
         if (!$user) {
-            return redirect()->route('login.show')->withErrors('You must be logged in to access this page.');
+            return redirect()->route('login')->withErrors('You must be logged in to access this page.');
         }
 
         // Check if user is verified
@@ -49,7 +49,7 @@ class RoleMiddleware
                 case 3:
                     return redirect()->route('user.dashboard')->withErrors('Unauthorized access – User only.');
                 default:
-                    return redirect()->route('login.show')->withErrors('Unauthorized access.');
+                    return redirect()->route('login')->withErrors('Unauthorized access.');
             }
         }
 

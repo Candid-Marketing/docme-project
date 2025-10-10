@@ -14,8 +14,8 @@ class FileController extends Controller
     {
         $file = File::findOrFail($id);
         return response()->json([
-            'name' => $file->name,
-            'url' => Storage::url($file->path), // Assuming you use Storage for file management
+            'name' => $file->file_name,
+            'url' => Storage::url($file->file_path),
         ]);
     }
 
@@ -23,7 +23,7 @@ class FileController extends Controller
     public function update(Request $request, $id)
     {
         $file = File::findOrFail($id);
-        $file->name = $request->input('name');
+        $file->file_name = $request->input('name');
         $file->save();
 
         return redirect()->route('superadmin.folders.show', $file->folder)->with('success', 'File updated successfully.');
@@ -309,7 +309,7 @@ class FileController extends Controller
             'file_path' => $filePath,
             'file_size' => $fileSize,
             'file_type' => $fileType,
-            'folder_name' => $folder . '/' . $subfolder, '/'. $innerfolder,
+            'folder_name' => $folder . '/' . $subfolder . '/' . $innerfolder,
             'created_by' => Auth::user()->email, // Assuming you're using Laravel's Auth system
             'updated_by' => Auth::user()->email, // You can update this later when the file is updated
         ]);
