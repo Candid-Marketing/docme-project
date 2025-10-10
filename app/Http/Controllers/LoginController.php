@@ -390,9 +390,9 @@ class LoginController extends Controller
             'amount' => 'required|numeric|min:0.01',
         ]);
 
-        $price_day = floatval(str_replace('$', '', Homepage::where('name', 'price_day')->first()->content ?? 9.00));
-        $price_month = floatval(str_replace('$', '', Homepage::where('name', 'price_month')->first()->content ?? 49.00));
-        $price_year = floatval(str_replace('$', '', Homepage::where('name', 'price_year')->first()->content ?? 490.00));
+        $price_day = floatval(str_replace('$', '', HomePage::where('name', 'price_day')->first()->content ?? 9.00));
+        $price_month = floatval(str_replace('$', '', HomePage::where('name', 'price_month')->first()->content ?? 49.00));
+        $price_year = floatval(str_replace('$', '', HomePage::where('name', 'price_year')->first()->content ?? 490.00));
         // Define all plans
         $plans = [
             'daily' => [
@@ -495,24 +495,28 @@ class LoginController extends Controller
     public function showStripePaymentPage()
     {
         $stripe = StripeConfigurations::first();
-        $homepage = Homepage::all();
+        $homepage = HomePage::all();
         return view('superadmin.pages.stripe.stripe-payment',compact('stripe','homepage'));
     }
 
     public function landing()
     {
-        $homepage = Homepage::all();
+        $homepage = HomePage::all();
         return view('landing', compact('homepage'));
     }
 
     public function createPaymentIntent(Request $request)
     {
-        Stripe::setApiKey(env('STRIPE_SECRET_KEY')); // Your secret key
+        $stripe = StripeConfigurations::latest()->first();
+        if (!$stripe || !$stripe->stripe_secret) {
+            return response()->json(['error' => 'Stripe configuration is missing.'], 500);
+        }
+        Stripe::setApiKey($stripe->stripe_secret);
 
-        $amount = $request->input('amount'); // Amount in cents
+        $amount = (int) $request->input('amount'); // Amount in cents
         $paymentIntent = PaymentIntent::create([
             'amount' => $amount,
-            'currency' => 'usd', // Change to your desired currency
+            'currency' => 'usd',
         ]);
 
         return response()->json(['clientSecret' => $paymentIntent->client_secret]);
@@ -520,9 +524,9 @@ class LoginController extends Controller
 
     private function updateUserStatusAndExpiration($payment, $user)
     {
-        $price_day = floatval(str_replace('$', '', Homepage::where('name', 'price_day')->first()->content ?? 9.00));
-        $price_month = floatval(str_replace('$', '', Homepage::where('name', 'price_month')->first()->content ?? 49.00));
-        $price_year = floatval(str_replace('$', '', Homepage::where('name', 'price_year')->first()->content ?? 490.00));
+        $price_day = floatval(str_replace('$', '', HomePage::where('name', 'price_day')->first()->content ?? 9.00));
+        $price_month = floatval(str_replace('$', '', HomePage::where('name', 'price_month')->first()->content ?? 49.00));
+        $price_year = floatval(str_replace('$', '', HomePage::where('name', 'price_year')->first()->content ?? 490.00));
 
         if ($payment->amount == $price_day) {
             $user->status = 1;
