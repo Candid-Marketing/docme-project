@@ -145,6 +145,83 @@
             padding-bottom: 30px;
         }
 
+        /* File preview styles */
+        .file-preview-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .file-icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        .file-details {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 500;
+            color: #333;
+            margin: 0;
+        }
+
+        .file-size {
+            font-size: 12px;
+            color: #666;
+            margin: 0;
+        }
+
+        .remove-file {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .remove-file:hover {
+            background: #c82333;
+        }
+
+        /* Drag and drop styles */
+        .file-upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-area:hover {
+            border-color: #3b68b2;
+            background-color: #f8f9fa;
+        }
+
+        .file-upload-area.dragover {
+            border-color: #3b68b2;
+            background-color: #e3f2fd;
+        }
+
 
 </style>
 <div class="main scrollable-main">
@@ -308,11 +385,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="availableFrom" class="form-label">Available From</label>
-                        <input type="datetime-local" class="form-control" id="availableFrom" name="available_from">
+                        <input type="datetime-local" class="form-control" id="availableFrom" name="available_from" value="{{ date('Y-m-d\TH:i') }}">
                     </div>
                     <div class="mb-3">
                         <label for="availableUntil" class="form-label">Available Until</label>
-                        <input type="datetime-local" class="form-control" id="availableUntil" name="available_until">
+                        <input type="datetime-local" class="form-control" id="availableUntil" name="available_until" value="{{ date('Y-m-d\T23:59', strtotime('+1 day')) }}">
                     </div>
                     <div class="modal-footer">
                          <a href="{{ route('admin.manage') }}" class="btn" style="background-color: #6c757d; color: white;">
@@ -334,7 +411,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Upload File</h5>
+                <h5 class="modal-title">Upload Files</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -346,15 +423,31 @@
 
 
                     <div class="col-12">
-                        <label for="file_upload" class="form-label">Upload File</label>
-                        <input type="file" id="file_upload" name="file_upload" class="form-control" required>
+                        <label for="file_upload" class="form-label">Upload Files</label>
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <div class="mb-2">
+                                <i class="fas fa-cloud-upload-alt" style="font-size: 24px; color: #3b68b2;"></i>
+                            </div>
+                            <p class="mb-2">Drag and drop files here or click to browse</p>
+                            <input type="file" id="file_upload" name="file_upload[]" class="form-control" multiple required style="display: none;">
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="document.getElementById('file_upload').click()">
+                                Choose Files
+                            </button>
+                        </div>
+                        <div class="form-text">You can select multiple files by holding Ctrl (or Cmd on Mac) while clicking.</div>
                         <span class="text-danger" id="error_file_upload"></span>
+
+                        <!-- File preview area -->
+                        <div id="filePreview" class="mt-3" style="display: none;">
+                            <h6>Selected Files:</h6>
+                            <div id="fileList" class="list-group"></div>
+                        </div>
                     </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn" style="background-color: #ed1d7e; color: white;" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn " style="background-color: #3b68b2; color: white;" onclick="uploadFile()">
-                            <span id="submitFileText">Upload File</span>
+                            <span id="submitFileText">Upload Files</span>
                             <span id="submitFileSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                         </button>
                     </div>
@@ -453,15 +546,18 @@
         }
     }
 
-    function uploadFile() {
-        let formData = new FormData();
+    // Global variable to store selected files
+    let selectedFiles = [];
 
-        // Append file and other fields
-        formData.append("file_upload", document.getElementById("file_upload").files[0]);
-        formData.append("file_name", document.getElementById("file_upload").files[0].name);
-        formData.append("folder_name", document.getElementById("folder_name").value);
-        formData.append("folder_id", document.getElementById("folder_id").value);
-        formData.append("_token", "{{ csrf_token() }}");
+    function uploadFile() {
+        if (selectedFiles.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No Files Selected',
+                text: 'Please select at least one file to upload.'
+            });
+            return;
+        }
 
         let submitButton = document.querySelector("button[onclick='uploadFile()']");
         let submitText = document.getElementById("submitFileText");
@@ -469,21 +565,34 @@
 
         // Show loading spinner
         submitSpinner.classList.remove("d-none");
-        submitText.textContent = "Uploading...";
+        submitText.textContent = `Uploading ${selectedFiles.length} file(s)...`;
 
-        axios.post("{{ route('admin.files.innerchild_folder_upload') }}", formData, {
-            headers: { "Content-Type": "multipart/form-data" }
-        })
-        .then(function (response) {
+        // Upload files one by one
+        let uploadPromises = selectedFiles.map((file, index) => {
+            let formData = new FormData();
+            formData.append("file_upload", file);
+            formData.append("file_name", file.name);
+            formData.append("folder_name", document.getElementById("folder_name").value);
+            formData.append("folder_id", document.getElementById("folder_id").value);
+            formData.append("_token", "{{ csrf_token() }}");
 
+            return axios.post("{{ route('admin.files.innerchild_folder_upload') }}", formData, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
+        });
+
+        // Wait for all uploads to complete
+        Promise.all(uploadPromises)
+        .then(function (responses) {
             // Close modal and reset form
             document.getElementById("fileUploadForm").reset();
+            selectedFiles = [];
+            updateFilePreview();
             $('#addFileModal').modal("hide");
 
-            // Append new file to the table (if applicable)
             Swal.fire({
                 title: 'Success!',
-                text: 'File uploaded successfully.',
+                text: `${responses.length} file(s) uploaded successfully.`,
                 icon: 'success',
                 confirmButtonText: 'OK'
             }).then((result) => {
@@ -497,13 +606,17 @@
                 let errors = error.response.data.errors;
                 document.getElementById("error_file_upload").innerText = errors.file_upload ? errors.file_upload[0] : "";
             } else {
-                alert("Something went wrong. Please try again.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Upload Failed',
+                    text: 'Some files failed to upload. Please try again.'
+                });
             }
         })
         .finally(function () {
             // Hide spinner and restore button text
             submitSpinner.classList.add("d-none");
-            submitText.textContent = "Upload File";
+            submitText.textContent = "Upload Files";
         });
     }
 
@@ -709,7 +822,115 @@
     });
 
 
+    // File preview and drag-drop functionality
+    function updateFilePreview() {
+        const filePreview = document.getElementById('filePreview');
+        const fileList = document.getElementById('fileList');
+
+        if (selectedFiles.length === 0) {
+            filePreview.style.display = 'none';
+            return;
+        }
+
+        filePreview.style.display = 'block';
+        fileList.innerHTML = '';
+
+        selectedFiles.forEach((file, index) => {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-preview-item';
+            fileItem.innerHTML = `
+                <div class="file-info">
+                    <span class="file-icon">${getFileIcon(file.type)}</span>
+                    <div class="file-details">
+                        <p class="file-name">${file.name}</p>
+                        <p class="file-size">${formatFileSize(file.size)}</p>
+                    </div>
+                </div>
+                <button type="button" class="remove-file" onclick="removeFile(${index})" title="Remove file">
+                    ×
+                </button>
+            `;
+            fileList.appendChild(fileItem);
+        });
+    }
+
+    function getFileIcon(fileType) {
+        if (fileType.startsWith('image/')) return '🖼️';
+        if (fileType.startsWith('video/')) return '🎥';
+        if (fileType.startsWith('audio/')) return '🎵';
+        if (fileType.includes('pdf')) return '📄';
+        if (fileType.includes('word')) return '📝';
+        if (fileType.includes('excel') || fileType.includes('spreadsheet')) return '📊';
+        if (fileType.includes('powerpoint') || fileType.includes('presentation')) return '📽️';
+        if (fileType.includes('zip') || fileType.includes('rar')) return '📦';
+        return '📁';
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function removeFile(index) {
+        selectedFiles.splice(index, 1);
+        updateFilePreview();
+    }
+
+    function addFiles(files) {
+        Array.from(files).forEach(file => {
+            // Check if file already exists
+            const exists = selectedFiles.some(f => f.name === file.name && f.size === file.size);
+            if (!exists) {
+                selectedFiles.push(file);
+            }
+        });
+        updateFilePreview();
+    }
+
+    // Initialize file upload functionality
     document.addEventListener('DOMContentLoaded', function () {
+        const fileInput = document.getElementById('file_upload');
+        const fileUploadArea = document.getElementById('fileUploadArea');
+
+        // File input change event
+        fileInput.addEventListener('change', function(e) {
+            addFiles(e.target.files);
+        });
+
+        // Drag and drop functionality
+        fileUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.add('dragover');
+        });
+
+        fileUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.remove('dragover');
+        });
+
+        fileUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.remove('dragover');
+            addFiles(e.dataTransfer.files);
+        });
+
+        // Click to upload
+        fileUploadArea.addEventListener('click', function(e) {
+            if (e.target === fileUploadArea || e.target.closest('.file-upload-area')) {
+                fileInput.click();
+            }
+        });
+
+        // Clear files when modal is closed
+        document.getElementById('addFileModal').addEventListener('hidden.bs.modal', function () {
+            selectedFiles = [];
+            updateFilePreview();
+            document.getElementById("fileUploadForm").reset();
+        });
+
         const inviteForm = document.getElementById('inviteForm');
         const sendInviteBtn = document.getElementById('confirmInvite');
 

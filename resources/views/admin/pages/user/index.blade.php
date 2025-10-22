@@ -493,12 +493,6 @@
                 }
             });
 
-                // Update button attributes dynamically to avoid stale data
-                button.setAttribute("data-first_name", firstName);
-                button.setAttribute("data-last_name", lastName);
-                button.setAttribute("data-email", email);
-                button.setAttribute("data-user_status", userStatus);
-
                 // Close the modal
                 $('#editUserModal').modal("hide");
             })

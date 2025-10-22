@@ -35,6 +35,14 @@ class UserFolderController extends Controller
         $userId = Auth::id();
         $parentId = $request->input('parent_id');
 
+        // Get all root folders with their complete hierarchy
+        $allFolders = UserStructureFolder::where('user_id', $userId)
+            ->whereNull('parent_id')
+            ->with('childrenRecursive')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // For pagination, get only the current level folders
         $folders = UserStructureFolder::where('user_id', $userId)
             ->when($parentId, fn($q) => $q->where('parent_id', $parentId), fn($q) => $q->whereNull('parent_id'))
             ->orderBy('created_at', 'desc')
@@ -43,13 +51,11 @@ class UserFolderController extends Controller
         $files = File::where('folder_id', $parentId)->paginate(5);
 
         // Fetch all folders for dropdown (not paginated)
-        $allFolders = UserStructureFolder::where('user_id', $userId)
+        $dropdownFolders = UserStructureFolder::where('user_id', $userId)
         ->where('parent_id', $parentId) // ✅ This is correct
         ->get();
 
-
-
-     $folderOptions = $allFolders->map(function ($folder) {
+     $folderOptions = $dropdownFolders->map(function ($folder) {
         return ['id' => $folder->id, 'name' => $folder->folder_name];
     });
    $guest = Auth::user()
@@ -59,7 +65,7 @@ class UserFolderController extends Controller
     })
     ->paginate(10);
 
-        return view('admin.pages.folder.index', compact('folders', 'parentId', 'files', 'folderOptions','guest'));
+        return view('admin.pages.folder.index', compact('folders', 'parentId', 'files', 'folderOptions','guest', 'allFolders'));
     }
 
     private function buildFolderOptions($folders, $prefix = '')

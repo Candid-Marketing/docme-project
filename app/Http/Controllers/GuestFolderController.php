@@ -108,25 +108,21 @@ class GuestFolderController extends Controller
 
     // ✅ 7. Determine if folders have shared files in themselves or their descendants
     $folderFileMap = [];
+    $folderFileCounts = [];
     foreach ($filteredFolders as $folder) {
         $descendantFolderIds = $this->getAllDescendantFolderIds($folder->id);
         $descendantFolderIds[] = $folder->id;
 
-        // Debug print
-        \Log::info("Checking folder ID: {$folder->id}");
-        \Log::info("Descendant IDs: " . implode(',', $descendantFolderIds));
-
-        foreach ($allFiles as $file) {
-            \Log::info("File ID: {$file->id}, Folder ID: {$file->folder_id}");
-        }
-
-         $hasFiles = $allFiles->contains(function ($file) use ($folder) {
+        // Count files that user has access to in this folder
+        $accessibleFiles = $allFiles->filter(function ($file) use ($folder) {
             return $file->folder_id == $folder->id;
         });
 
-        \Log::info("Folder {$folder->id} has files: " . ($hasFiles ? 'YES' : 'NO'));
+        $hasFiles = $accessibleFiles->count() > 0;
+        $fileCount = $accessibleFiles->count();
 
         $folderFileMap[$folder->id] = $hasFiles;
+        $folderFileCounts[$folder->id] = $fileCount;
     }
 
 
@@ -139,10 +135,41 @@ class GuestFolderController extends Controller
         ['path' => request()->url(), 'query' => request()->query()]
     );
 
+    // ✅ 9. Get all descendant folders for tree view
+    $treeFolders = collect();
+    foreach ($filteredFolders as $folder) {
+        $treeFolders->push($folder);
+        $this->addDescendantFolders($folder, $treeFolders, $allFolders);
+    }
+
+    // ✅ 9.5. Calculate file counts for all tree folders (including descendants)
+    foreach ($treeFolders as $folder) {
+        if (!isset($folderFileCounts[$folder->id])) {
+            // Count files that user has access to in this folder
+            $accessibleFiles = $allFiles->filter(function ($file) use ($folder) {
+                return $file->folder_id == $folder->id;
+            });
+
+            $hasFiles = $accessibleFiles->count() > 0;
+            $fileCount = $accessibleFiles->count();
+
+            $folderFileMap[$folder->id] = $hasFiles;
+            $folderFileCounts[$folder->id] = $fileCount;
+        }
+    }
+
+    // ✅ 10. For tree view, only show root level folders (those that match current parentId)
+    $treeRootFolders = $treeFolders->filter(function ($folder) use ($parentId) {
+        return $folder->parent_id == $parentId;
+    });
+
     return view('user.pages.folder.index', [
         'folders' => $paginatedFolders,
         'parentId' => $parentId,
-        'folderFileMap' => $folderFileMap
+        'folderFileMap' => $folderFileMap,
+        'folderFileCounts' => $folderFileCounts,
+        'treeFolders' => $treeFolders,
+        'treeRootFolders' => $treeRootFolders
     ]);
 }
 
@@ -549,6 +576,18 @@ class GuestFolderController extends Controller
         }
 
         return $ids;
+    }
+
+    private function addDescendantFolders($parentFolder, $treeFolders, $allFolders)
+    {
+        $children = $allFolders->filter(function ($folder) use ($parentFolder) {
+            return $folder->parent_id == $parentFolder->id;
+        });
+
+        foreach ($children as $child) {
+            $treeFolders->push($child);
+            $this->addDescendantFolders($child, $treeFolders, $allFolders);
+        }
     }
 
 
